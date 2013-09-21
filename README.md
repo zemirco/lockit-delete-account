@@ -4,7 +4,7 @@ not ready yet .. come back later
 
 ## Installation
 
-`npm install ...`
+`npm install lockit-delete-account`
 
 ```js
 var config = require('./config.js');
