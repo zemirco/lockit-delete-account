@@ -8,7 +8,7 @@ not ready yet .. come back later
 
 ```js
 var config = require('./config.js');
-var deleteAccount = require('../index.js');
+var deleteAccount = require('lockit-delete-account');
 var app = express();
 
 deleteAccount(app, config);
