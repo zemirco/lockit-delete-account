@@ -1,0 +1,22 @@
+{
+  "name": "lockit-delete-account",
+  "version": "0.0.1",
+  "description": "delete account middleware for lockit",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "bcrypt": "~0.7.7"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.4",
+    "grunt-mocha-test": "~0.7.0",
+    "supertest": "~0.8.0",
+    "should": "~1.3.0",
+    "lockit-couchdb-adapter": "0.0.2"
+  }
+}

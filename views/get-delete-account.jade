@@ -1,0 +1,22 @@
+extend ../../views/layout
+
+block content
+  div.panel.panel-default
+    div.panel-heading Delete account
+    div.panel-body
+      p Once you delete your account, there is no going back. Please be certain.
+      form(action="/delete-account", method="POST")
+        div.form-group
+          label(for="username") Enter your username
+          input.form-control(type="text", id="username", name="username")
+        div.form-group
+          label(for="phrase") Type in the following phrase 
+          span 
+            small please delete my account forever
+          input.form-control(type="text", id="phrase", name="phrase")
+        div.form-group
+          label(for="password") Confirm your password
+          input.form-control(type="password", id="password", name="password")
+        if error
+          div.alert.alert-warning #{error}
+        input(type="submit", class="btn btn-primary", value="Delete my account")
