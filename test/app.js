@@ -15,11 +15,15 @@ var deleteAccount = require('../index.js');
 
 var app = express();
 
+// set basedir so views can properly extend layout.jade
+app.locals.basedir = __dirname + '/views'; // comment out and error returns
+
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.favicon());
+app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
