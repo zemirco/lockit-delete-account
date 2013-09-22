@@ -1,13 +1,26 @@
 {
   "name": "lockit-delete-account",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "delete account middleware for lockit",
   "main": "index.js",
   "scripts": {
     "test": "grunt"
   },
-  "author": "",
-  "license": "BSD-2-Clause",
+  "author": {
+    "name": "Mirco Zeiss",
+    "email": "mirco.zeiss@gmail.com",
+    "twitter": "zeMirco"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zeMirco/lockit-delete-account"
+  },
+  "keywords": [
+    "lockit",
+    "delete",
+    "account"
+  ],
   "dependencies": {
     "bcrypt": "~0.7.7"
   },
