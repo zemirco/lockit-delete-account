@@ -16,9 +16,34 @@ deleteAccount(app, config);
 
 ## What do I get?
 
- - `GET /delete-account`
- - `POST /delete-account`
+### GET /delete-account
+
+ - render template with input fields for `username`, `phrase` and `password`
+
+### POST /delete-account
+
+ - verify that input fields aren't empty
+ - check if phrase matches `please delete my account forever`
+ - confirm that `username` matches session on server
+ - find user in database
+ - compare provided `password` with hash from database
+ - kill session on server
+ - delete user from database
+ - render success message
 
 ## Test
 
+JavaScript files are hinted during tests and module is tested with Mocha. You need to have a CouchDB instance running 
+with the settings specified at `./test/config.js`. To start the test simply run the default Grunt task.
+
+`grunt`
+
 ## License
+
+Copyright (C) 2013 [Mirco Zeiss](mailto: mirco.zeiss@gmail.com)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
