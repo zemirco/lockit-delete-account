@@ -19,11 +19,11 @@ deleteAccount(app, config);
  - [GET /delete-account](#get-delete-account)
  - [POST /delete-account](#post-delete-account)
 
-### GET /delete-account
+#### GET /delete-account
 
  - render template with input fields for `username`, `phrase` and `password`
 
-### POST /delete-account
+#### POST /delete-account
 
  - verify that input fields aren't empty
  - check if phrase matches `please delete my account forever`
