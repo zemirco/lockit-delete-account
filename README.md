@@ -16,6 +16,9 @@ deleteAccount(app, config);
 
 ## What do I get?
 
+ - [GET /delete-account](#get-delete-account)
+ - [POST /delete-account](#post-delete-account)
+
 ### GET /delete-account
 
  - render template with input fields for `username`, `phrase` and `password`
