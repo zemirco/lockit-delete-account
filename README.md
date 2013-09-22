@@ -26,9 +26,9 @@ deleteAccount(app, config);
 #### POST /delete-account
 
  - verify that input fields aren't empty
- - check if phrase matches `please delete my account forever`
+ - check if `phrase` matches "please delete my account forever"
  - confirm that `username` matches session on server
- - find user in database
+ - find `username` in database
  - compare provided `password` with hash from database
  - kill session on server
  - delete user from database
