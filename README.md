@@ -1,6 +1,6 @@
 # delete account middleware for lockit
 
-not ready yet .. come back later
+Express middleware for deleting user accounts. It is part of the lockit package.
 
 ## Installation
 
