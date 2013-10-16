@@ -48,9 +48,6 @@ More about configuration at [Lockit](https://github.com/zeMirco/lockit).
 
 ## Test
 
-JavaScript files are hinted during tests and module is tested with Mocha. You need to have a CouchDB instance running 
-with the settings specified at `./test/config.js`. To start the test simply run the default Grunt task.
-
 `grunt`
 
 ## License
