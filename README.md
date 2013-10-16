@@ -1,6 +1,8 @@
-# delete account middleware for lockit
+# Lockit delete account
 
-Express middleware for deleting user accounts. It is part of the lockit package.
+[![Build Status](https://travis-ci.org/zeMirco/lockit-delete-account.png?branch=master)](https://travis-ci.org/zeMirco/lockit-delete-account)
+
+Delete user accounts in your Express app. The module is part of [Lockit](https://github.com/zeMirco/lockit).
 
 ## Installation
 
@@ -27,25 +29,22 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 ```
 
-## What do I get?
+## Configuration
 
- - [GET /delete-account](#get-delete-account)
- - [POST /delete-account](#post-delete-account)
+More about configuration at [Lockit](https://github.com/zeMirco/lockit).
 
-#### GET /delete-account
+## Features
 
- - render template with input fields for `username`, `phrase` and `password`
+ - input validation
+ - match public phrase
+ - session verification
+ - kill current session
+ - remove user from db
 
-#### POST /delete-account
+## Routes included
 
- - verify that input fields aren't empty
- - check if `phrase` matches "please delete my account forever"
- - confirm that `username` matches session on server
- - find `username` in database
- - compare provided `password` with hash from database
- - kill session on server
- - delete user from database
- - render success message
+ - GET /delete-account
+ - POST /delete-account
 
 ## Test
 
