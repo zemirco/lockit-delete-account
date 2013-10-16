@@ -74,7 +74,7 @@ module.exports = function(app, config) {
         }
         
         // delete user from db :(
-        adapter.delete('username', username, function(err) {
+        adapter.remove('username', username, function(err) {
           if (err) console.log(err);
           
           // kill session

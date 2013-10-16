@@ -16,7 +16,7 @@ var deleteAccount = require('../index.js');
 var app = express();
 
 // set basedir so views can properly extend layout.jade
-app.locals.basedir = __dirname + '/views'; // comment out and error returns
+app.locals.basedir = __dirname + '/views';
 
 // all environments
 app.set('port', process.env.PORT || 3000);
