@@ -1,6 +1,8 @@
 # Lockit delete account
 
-[![Build Status](https://travis-ci.org/zeMirco/lockit-delete-account.png?branch=master)](https://travis-ci.org/zeMirco/lockit-delete-account)
+[![Build Status](https://travis-ci.org/zeMirco/lockit-delete-account.png?branch=master)](https://travis-ci.org/zeMirco/lockit-delete-account) [![NPM version](https://badge.fury.io/js/lockit-delete-account.png)](http://badge.fury.io/js/lockit-delete-account)
+
+[![NPM](https://nodei.co/npm/lockit-delete-account.png)](https://nodei.co/npm/lockit-delete-account/)
 
 Delete user accounts in your Express app. The module is part of [Lockit](https://github.com/zeMirco/lockit).
 
