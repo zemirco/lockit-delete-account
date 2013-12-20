@@ -2,21 +2,28 @@
 var path = require('path');
 var bcrypt = require('bcrypt');
 
+var debug = require('debug')('lockit-delete-account');
+var utils = require('lockit-utils');
+
 module.exports = function(app, config) {
 
   // load additional modules
   var adapter = require('lockit-' + config.db + '-adapter')(config);
-
+  // set default route
+  var route = config.deleteAccountRoute || '/delete-account';
+  
   // GET /delete-account
-  app.get('/delete-account', function(req, res) {
+  app.get(route, utils.restrict(config), function(req, res) {
+    debug('rendering GET /delete-account');
     res.render(path.join(__dirname, 'views', 'get-delete-account'), {
       title: 'Delete account'
     });
   });
   
   // POST /delete-account
-  app.post('/delete-account', function(req, res) {
-    
+  app.post(route, utils.restrict(config), function(req, res) {
+    debug('receiving data via POST request: %j', req.body);
+
     // verify input fields
     var username = req.body.username;
     var phrase = req.body.phrase;
@@ -34,6 +41,7 @@ module.exports = function(app, config) {
     }
 
     if (error) {
+      debug('Invalid input value: %s', error);
       res.status(403);
       res.render(path.join(__dirname, 'views', 'get-delete-account'), {
         title: 'Delete account',
@@ -48,6 +56,7 @@ module.exports = function(app, config) {
       
       // no user found - kind of duplicate check after session verification ?!?
       if (!user) {
+        debug('No user found. Rendering view with error message');
         res.status(403);
         res.render(path.join(__dirname, 'views', 'get-delete-account'), {
           title: 'Delete account',
@@ -58,7 +67,7 @@ module.exports = function(app, config) {
       
       // verify user password
       bcrypt.compare(password, user.hash, function(err, valid) {
-
+        debug('Password is valid: %s', valid);
         if (err) console.log(err);
         
         // compare hash with hash from db
