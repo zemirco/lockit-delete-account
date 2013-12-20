@@ -28,7 +28,6 @@ deleteAccount(app, config);
 
 // serve static files as last middleware
 app.use(express.static(path.join(__dirname, 'public')));
-
 ```
 
 ## Configuration
