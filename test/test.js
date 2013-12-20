@@ -75,10 +75,6 @@ describe('delete account', function() {
 
     });
     
-    it.skip('should show an error message when no user is found for username', function(done) {
-      
-    });
-    
     it('should show an error message when password is incorrect', function(done) {
 
       request(app)
