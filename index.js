@@ -54,16 +54,7 @@ module.exports = function(app, config) {
     adapter.find('username', username, function(err, user) {
       if (err) console.log(err);
       
-      // no user found - kind of duplicate check after session verification ?!?
-      if (!user) {
-        debug('No user found. Rendering view with error message');
-        res.status(403);
-        res.render(path.join(__dirname, 'views', 'get-delete-account'), {
-          title: 'Delete account',
-          error: 'Username not found'
-        });
-        return;
-      }
+      // no need to check if user exists in db since we are already checking against current session
       
       // verify user password
       bcrypt.compare(password, user.hash, function(err, valid) {
