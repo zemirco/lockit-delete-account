@@ -23,7 +23,8 @@
   ],
   "dependencies": {
     "bcrypt": "~0.7.7",
-    "debug": "~0.7.3"
+    "debug": "~0.7.3",
+    "lockit-utils": "~0.0.2"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
