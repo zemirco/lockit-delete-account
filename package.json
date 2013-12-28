@@ -24,7 +24,8 @@
   "dependencies": {
     "bcrypt": "~0.7.7",
     "debug": "~0.7.3",
-    "lockit-utils": "~0.0.2"
+    "lockit-utils": "~0.0.2",
+    "lockit-couchdb-adapter": "0.0.3"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
@@ -32,7 +33,6 @@
     "grunt-mocha-test": "~0.7.0",
     "supertest": "~0.8.0",
     "should": "~1.3.0",
-    "lockit-couchdb-adapter": "0.0.3",
     "nano": "~4.1.1",
     "jade": "~0.35.0",
     "express": "~3.4.7"
