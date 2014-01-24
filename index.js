@@ -6,16 +6,25 @@ var debug = require('debug')('lockit-delete-account');
 var utils = require('lockit-utils');
 
 module.exports = function(app, config) {
-
+  
   // load additional modules
-  var adapter = require('lockit-' + config.db + '-adapter')(config);
+  var db = utils.getDatabase(config);
+  var adapter = require(db.adapter)(config);
+  
+  // shorten config
+  var cfg = config.deleteAccount;
+  
   // set default route
-  var route = config.deleteAccountRoute || '/delete-account';
+  var route = cfg.deleteAccountRoute || '/delete-account';
   
   // GET /delete-account
   app.get(route, utils.restrict(config), function(req, res) {
     debug('rendering GET /delete-account');
-    res.render(path.join(__dirname, 'views', 'get-delete-account'), {
+
+    // custom or built-in view
+    var view = cfg.views.remove || path.join(__dirname, 'views', 'get-delete-account');
+    
+    res.render(view, {
       title: 'Delete account'
     });
   });
@@ -40,10 +49,14 @@ module.exports = function(app, config) {
       error = 'You can only delete your own account. Please enter your username';
     }
 
+    // custom or built-in view
+    var view = cfg.views.remove || path.join(__dirname, 'views', 'get-delete-account');
+
     if (error) {
       debug('Invalid input value: %s', error);
+      
       res.status(403);
-      res.render(path.join(__dirname, 'views', 'get-delete-account'), {
+      res.render(view, {
         title: 'Delete account',
         error: error
       });
@@ -65,7 +78,7 @@ module.exports = function(app, config) {
         if (!valid) {
 
           res.status(403);
-          res.render(path.join(__dirname, 'views', 'get-delete-account'), {
+          res.render(view, {
             title: 'Delete account',
             error: 'Password is wrong'
           });
@@ -80,8 +93,10 @@ module.exports = function(app, config) {
           // kill session
           req.session = null;
 
+          view = cfg.views.removed || path.join(__dirname, 'views', 'post-delete-account');
+
           // render success message
-          res.render(path.join(__dirname, 'views', 'post-delete-account'), {
+          res.render(view, {
             title: 'Account deleted'
           });
         });
