@@ -141,19 +141,17 @@ describe('delete account', function() {
       // reactivate user - has to be the same because of current session
       // session is set before middleware so it is renewed although destroyed 
       // by test before
-      before(function(done) {
         adapter.save('john', 'john@email.com', 'password', function(err, user) {
           if (err) console.log(err);
-          done();
-        });
-      });
 
-      request(app_2)
-        .post('/delete-account')
-        .send({username: 'john', phrase: 'please delete my account forever', password: 'password'})
-        .end(function(error, res) {
-          res.text.should.include('We will miss you!');
-          done();
+          request(app_2)
+            .post('/delete-account')
+            .send({username: 'john', phrase: 'please delete my account forever', password: 'password'})
+            .end(function(error, res) {
+              res.text.should.include('We will miss you!');
+              done();
+            });
+          
         });
 
     });
