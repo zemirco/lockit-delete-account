@@ -35,6 +35,6 @@
     "nano": "~4.1.1",
     "jade": "~0.35.0",
     "express": "~3.4.7",
-    "lockit-couchdb-adapter": "0.1.0"
+    "lockit-couchdb-adapter": "0.2.0"
   }
 }
