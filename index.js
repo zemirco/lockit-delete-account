@@ -5,6 +5,18 @@ var bcrypt = require('bcrypt');
 var debug = require('debug')('lockit-delete-account');
 var utils = require('lockit-utils');
 
+/**
+ * Internal helper functions
+ */
+
+function join(view) {
+  return path.join(__dirname, 'views', view);
+}
+
+/**
+ * Let's get serious
+ */
+
 module.exports = function(app, config) {
   
   // load additional modules
@@ -17,20 +29,31 @@ module.exports = function(app, config) {
   // set default route
   var route = cfg.deleteAccountRoute || '/delete-account';
   
+  /**
+   * Routes 
+   */
+
+  app.get(route, utils.restrict(config), getDelete);
+  app.post(route, utils.restrict(config), postDelete);
+
+  /**
+   * Route handlers 
+   */
+  
   // GET /delete-account
-  app.get(route, utils.restrict(config), function(req, res) {
+  function getDelete(req, res) {
     debug('rendering GET /delete-account');
 
     // custom or built-in view
-    var view = cfg.views.remove || path.join(__dirname, 'views', 'get-delete-account');
-    
+    var view = cfg.views.remove || join('get-delete-account');
+
     res.render(view, {
       title: 'Delete account'
     });
-  });
+  }
   
   // POST /delete-account
-  app.post(route, utils.restrict(config), function(req, res) {
+  function postDelete(req, res) {
     debug('receiving data via POST request: %j', req.body);
 
     // verify input fields
@@ -50,11 +73,11 @@ module.exports = function(app, config) {
     }
 
     // custom or built-in view
-    var view = cfg.views.remove || path.join(__dirname, 'views', 'get-delete-account');
+    var view = cfg.views.remove || join('get-delete-account');
 
     if (error) {
       debug('Invalid input value: %s', error);
-      
+
       res.status(403);
       res.render(view, {
         title: 'Delete account',
@@ -62,18 +85,18 @@ module.exports = function(app, config) {
       });
       return;
     }
-    
+
     // get user from db
     adapter.find('username', username, function(err, user) {
       if (err) console.log(err);
-      
+
       // no need to check if user exists in db since we are already checking against current session
-      
+
       // verify user password
       bcrypt.compare(password, user.hash, function(err, valid) {
         debug('Password is valid: %s', valid);
         if (err) console.log(err);
-        
+
         // compare hash with hash from db
         if (!valid) {
 
@@ -85,26 +108,25 @@ module.exports = function(app, config) {
           return;
 
         }
-        
+
         // delete user from db :(
         adapter.remove('username', username, function(err) {
           if (err) console.log(err);
-          
+
           // kill session
           req.session = null;
 
-          view = cfg.views.removed || path.join(__dirname, 'views', 'post-delete-account');
+          view = cfg.views.removed || join('post-delete-account');
 
           // render success message
           res.render(view, {
             title: 'Account deleted'
           });
         });
-        
+
       });
 
     });
-    
-  });
+  }
   
 };
