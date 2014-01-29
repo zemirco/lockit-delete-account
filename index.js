@@ -28,6 +28,9 @@ module.exports = function(app, config) {
   
   // set default route
   var route = cfg.deleteAccountRoute || '/delete-account';
+
+  // add prefix when rest is active
+  if (config.rest) route = '/rest' + route;
   
   /**
    * Routes 
@@ -41,8 +44,11 @@ module.exports = function(app, config) {
    */
   
   // GET /delete-account
-  function getDelete(req, res) {
+  function getDelete(req, res, next) {
     debug('rendering GET /delete-account');
+
+    // do not handle the route when REST is active
+    if (config.rest) return next();
 
     // custom or built-in view
     var view = cfg.views.remove || join('get-delete-account');
@@ -78,6 +84,9 @@ module.exports = function(app, config) {
     if (error) {
       debug('Invalid input value: %s', error);
 
+      // do not handle the route when REST is active
+      if (config.rest) return res.json(403, {error: error});
+
       res.status(403);
       res.render(view, {
         title: 'Delete account',
@@ -99,11 +108,15 @@ module.exports = function(app, config) {
 
         // compare hash with hash from db
         if (!valid) {
+          error = 'Password is wrong';
+
+          // do not handle the route when REST is active
+          if (config.rest) return res.json(403, {error: error});
 
           res.status(403);
           res.render(view, {
             title: 'Delete account',
-            error: 'Password is wrong'
+            error: error
           });
           return;
 
@@ -115,6 +128,9 @@ module.exports = function(app, config) {
 
           // kill session
           req.session = null;
+
+          // do not handle the route when REST is active
+          if (config.rest) return res.send(200);
 
           view = cfg.views.removed || join('post-delete-account');
 
