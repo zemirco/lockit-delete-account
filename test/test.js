@@ -18,6 +18,12 @@ config_2.deleteAccount.views = {
 };
 var app_2 = require('./app.js')(config_2);
 
+// create a third app for rest api
+var config_3 = JSON.parse(JSON.stringify(config));
+config_3.port = 5000;
+config_3.rest = true;
+var app_3 = require('./app.js')(config_3);
+
 // add a dummy user to db
 before(function(done) {
   adapter.save('john', 'john@email.com', 'password', function(err, user) {
@@ -38,6 +44,17 @@ describe('delete account', function() {
           res.statusCode.should.equal(200);
           res.text.should.include('Once you delete your account, there is no going back');
           res.text.should.include('<title>Delete account</title>');
+          done();
+        });
+
+    });
+
+    it('should render the default route (REST)', function(done) {
+
+      request(app_3)
+        .get('/rest/delete-account')
+        .end(function(err, res) {
+          res.statusCode.should.equal(404);
           done();
         });
 
@@ -71,6 +88,19 @@ describe('delete account', function() {
       
     });
 
+    it('should show an error message when an input field is empty (REST)', function(done) {
+
+      request(app_3)
+        .post('/rest/delete-account')
+        .send({username: '', phrase: 'lorem', password: 'secret'})
+        .end(function(error, res) {
+          res.statusCode.should.equal(403);
+          res.text.should.equal('{"error":"All fields are required"}');
+          done();
+        });
+
+    });
+
     it('should show an error message when phrase is incorrect', function(done) {
 
       request(app)
@@ -79,6 +109,19 @@ describe('delete account', function() {
         .end(function(error, res) {
           res.statusCode.should.equal(403);
           res.text.should.include('Phrase doesn\'t match');
+          done();
+        });
+
+    });
+
+    it('should show an error message when phrase is incorrect (REST)', function(done) {
+
+      request(app_3)
+        .post('/rest/delete-account')
+        .send({username: 'john', phrase: 'please do not delete my account forever', password: 'secret'})
+        .end(function(error, res) {
+          res.statusCode.should.equal(403);
+          res.text.should.equal('{"error":"Phrase doesn\'t match"}');
           done();
         });
 
@@ -96,6 +139,19 @@ describe('delete account', function() {
         });
 
     });
+
+    it('should show an error message when session doesn\'t match username (REST)', function(done) {
+
+      request(app_3)
+        .post('/rest/delete-account')
+        .send({username: 'jack', phrase: 'please delete my account forever', password: 'secret'})
+        .end(function(error, res) {
+          res.statusCode.should.equal(403);
+          res.text.should.equal('{"error":"You can only delete your own account. Please enter your username"}');
+          done();
+        });
+
+    });
     
     it('should show an error message when password is incorrect', function(done) {
 
@@ -108,6 +164,19 @@ describe('delete account', function() {
           done();
         });
       
+    });
+
+    it('should show an error message when password is incorrect (REST)', function(done) {
+
+      request(app_3)
+        .post('/rest/delete-account')
+        .send({username: 'john', phrase: 'please delete my account forever', password: 'secret'})
+        .end(function(error, res) {
+          res.statusCode.should.equal(403);
+            res.text.should.equal('{"error":"Password is wrong"}');
+          done();
+        });
+
     });
 
     it('should work with custom error view', function(done) {
@@ -134,6 +203,27 @@ describe('delete account', function() {
           done();
         });
       
+    });
+
+    it('should delete a user from db when everything is fine (REST)', function(done) {
+
+      // reactivate user - has to be the same because of current session
+      // session is set before middleware so it is renewed although destroyed 
+      // by test before
+      adapter.save('john', 'john@email.com', 'password', function(err, user) {
+        if (err) console.log(err);
+
+        request(app_3)
+          .post('/rest/delete-account')
+          .send({username: 'john', phrase: 'please delete my account forever', password: 'password'})
+          .end(function(error, res) {
+            res.statusCode.should.equal(200);
+            res.text.should.equal('OK');
+            done();
+          });
+
+      });
+
     });
 
     it('should work with custom success view', function(done) {
