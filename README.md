@@ -46,7 +46,15 @@ More about configuration at [Lockit](https://github.com/zeMirco/lockit).
 
  - GET /delete-account
  - POST /delete-account
+ 
+## REST API
 
+If you've set `exports.rest = true` in your `config.js` the module behaves as follows.
+
+ - all routes have `/rest` prepended
+ - `GET /rest/delete-account` is `next()`ed and you can catch `/delete-account` on the client
+ - `POST /rest/delete-account` stays the same but sends JSON
+ 
 ## Test
 
 `grunt`
