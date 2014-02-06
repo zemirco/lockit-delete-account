@@ -6,6 +6,7 @@ block content
     div.panel-body
       p Once you delete your account, there is no going back. Please be certain.
       form(action="/delete-account", method="POST")
+        input(type="hidden", name="_csrf", value=_csrf)
         div.form-group
           label(for="username") Enter your username
           input.form-control(type="text", id="username", name="username")
