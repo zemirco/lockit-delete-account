@@ -10,7 +10,7 @@ var http = require('http');
 var path = require('path');
 
 // require delete account middleware
-var deleteAccount = require('../index.js');
+var deleteAccount = require('../../index.js');
 
 function start(config) {
 
@@ -32,6 +32,19 @@ function start(config) {
   app.use(express.methodOverride());
   app.use(express.cookieParser('your secret here'));
   app.use(express.cookieSession());
+
+  if (config.csrf) {
+    app.use(express.csrf());
+    app.use(function(req, res, next) {
+
+      var token = req.csrfToken();
+      res.locals._csrf = token;
+
+      // save token to a cookie so we can easily access it on the client
+      res.cookie('csrf', token);
+      next();
+    });
+  }
 
 // set a dummy session for testing purpose
   app.use(function(req, res, next) {
