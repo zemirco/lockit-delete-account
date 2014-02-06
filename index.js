@@ -27,7 +27,7 @@ module.exports = function(app, config) {
   var cfg = config.deleteAccount;
   
   // set default route
-  var route = cfg.deleteAccountRoute || '/delete-account';
+  var route = cfg.route || '/delete-account';
 
   // add prefix when rest is active
   if (config.rest) route = '/rest' + route;
