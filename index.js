@@ -5,6 +5,10 @@ var bcrypt = require('bcrypt');
 var debug = require('debug')('lockit-delete-account');
 var utils = require('lockit-utils');
 
+// require event emitter
+var events = require('events');
+var util = require('util');
+
 /**
  * Internal helper functions
  */
@@ -17,8 +21,14 @@ function join(view) {
  * Let's get serious
  */
 
-module.exports = function(app, config) {
-  
+var DeleteAccount = module.exports = function(app, config) {
+
+  if (!(this instanceof DeleteAccount)) {
+    return new DeleteAccount(app, config);
+  }
+
+  var that = this;
+
   // load additional modules
   var db = utils.getDatabase(config);
   var adapter = require(db.adapter)(config);
@@ -129,20 +139,32 @@ module.exports = function(app, config) {
           // kill session
           req.session = null;
 
-          // do not handle the route when REST is active
-          if (config.rest) return res.send(200);
+          // emit 'delete' event
+          that.emit('delete', user, res);
+          
+          if (cfg.handleResponse) {
 
-          view = cfg.views.removed || join('post-delete-account');
+            // do not handle the route when REST is active
+            if (config.rest) return res.send(200);
 
-          // render success message
-          res.render(view, {
-            title: 'Account deleted'
-          });
+            view = cfg.views.removed || join('post-delete-account');
+
+            // render success message
+            res.render(view, {
+              title: 'Account deleted'
+            });
+            
+          }
+
         });
 
       });
 
     });
   }
-  
+
+  events.EventEmitter.call(this);
+
 };
+
+util.inherits(DeleteAccount, events.EventEmitter);
