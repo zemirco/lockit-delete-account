@@ -11,5 +11,6 @@ exports.deleteAccount = {
   views: {
     remove: '',         // input fields 'username', 'phrase', 'password' | POST /'deleteAccount.route' | local variable 'error'
     removed: ''         // message that account has been deleted
-  }
+  },
+  handleResponse: true
 };
