@@ -1,8 +1,6 @@
 
 var path = require('path');
 var bcrypt = require('bcrypt');
-
-var debug = require('debug')('lockit-delete-account');
 var utils = require('lockit-utils');
 
 // require event emitter
@@ -32,31 +30,29 @@ var DeleteAccount = module.exports = function(app, config) {
   // load additional modules
   var db = utils.getDatabase(config);
   var adapter = require(db.adapter)(config);
-  
+
   // shorten config
   var cfg = config.deleteAccount;
-  
+
   // set default route
   var route = cfg.route || '/delete-account';
 
   // add prefix when rest is active
   if (config.rest) route = '/rest' + route;
-  
+
   /**
-   * Routes 
+   * Routes
    */
 
   app.get(route, utils.restrict(config), getDelete);
   app.post(route, utils.restrict(config), postDelete);
 
   /**
-   * Route handlers 
+   * Route handlers
    */
-  
+
   // GET /delete-account
   function getDelete(req, res, next) {
-    debug('rendering GET /delete-account');
-
     // do not handle the route when REST is active
     if (config.rest) return next();
 
@@ -67,11 +63,9 @@ var DeleteAccount = module.exports = function(app, config) {
       title: 'Delete account'
     });
   }
-  
+
   // POST /delete-account
   function postDelete(req, res) {
-    debug('receiving data via POST request: %j', req.body);
-
     // verify input fields
     var username = req.body.username;
     var phrase = req.body.phrase;
@@ -92,8 +86,6 @@ var DeleteAccount = module.exports = function(app, config) {
     var view = cfg.views.remove || join('get-delete-account');
 
     if (error) {
-      debug('Invalid input value: %s', error);
-
       // do not handle the route when REST is active
       if (config.rest) return res.json(403, {error: error});
 
@@ -113,7 +105,6 @@ var DeleteAccount = module.exports = function(app, config) {
 
       // verify user password
       bcrypt.compare(password, user.hash, function(err, valid) {
-        debug('Password is valid: %s', valid);
         if (err) console.log(err);
 
         // compare hash with hash from db
@@ -141,7 +132,7 @@ var DeleteAccount = module.exports = function(app, config) {
 
           // emit 'delete' event
           that.emit('delete', user, res);
-          
+
           if (cfg.handleResponse) {
 
             // do not handle the route when REST is active
@@ -153,7 +144,7 @@ var DeleteAccount = module.exports = function(app, config) {
             res.render(view, {
               title: 'Account deleted'
             });
-            
+
           }
 
         });

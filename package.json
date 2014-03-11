@@ -23,7 +23,6 @@
   ],
   "dependencies": {
     "bcrypt": "~0.7.7",
-    "debug": "~0.7.3",
     "lockit-utils": "0.1.1"
   },
   "devDependencies": {
