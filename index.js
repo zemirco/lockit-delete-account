@@ -1,4 +1,3 @@
-
 var path = require('path');
 var bcrypt = require('bcrypt');
 var utils = require('lockit-utils');
@@ -136,7 +135,7 @@ var DeleteAccount = module.exports = function(app, config) {
           if (cfg.handleResponse) {
 
             // do not handle the route when REST is active
-            if (config.rest) return res.send(200);
+            if (config.rest) return res.send(204);
 
             view = cfg.views.removed || join('post-delete-account');
 
