@@ -1,4 +1,3 @@
-
 var request = require('supertest');
 var should = require('should');
 var utls = require('lockit-utils');
@@ -85,8 +84,7 @@ describe('# rest enabled', function() {
         .post('/rest/delete-account')
         .send({username: 'john', phrase: 'please delete my account forever', password: 'password'})
         .end(function(error, res) {
-          res.statusCode.should.equal(200);
-          res.text.should.equal('OK');
+          res.statusCode.should.equal(204);
           done();
         });
     });
