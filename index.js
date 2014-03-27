@@ -19,17 +19,11 @@ function join(view) {
  * Let's get serious
  */
 
-var DeleteAccount = module.exports = function(app, config) {
+var DeleteAccount = module.exports = function(app, config, adapter) {
 
-  if (!(this instanceof DeleteAccount)) {
-    return new DeleteAccount(app, config);
-  }
+  if (!(this instanceof DeleteAccount)) return new DeleteAccount(app, config, adapter);
 
   var that = this;
-
-  // load additional modules
-  var db = utils.getDatabase(config);
-  var adapter = require(db.adapter)(config);
 
   // shorten config
   var cfg = config.deleteAccount;
