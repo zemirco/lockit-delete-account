@@ -26,7 +26,11 @@ app.use(function(req, res, next) {
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 http.createServer(app).listen(app.get('port'));
-var deleteAccount = new DeleteAccount(app, config);
+
+var db = utls.getDatabase(config);
+var adapter = require(db.adapter)(config);
+
+var deleteAccount = new DeleteAccount(app, config, adapter);
 
 // create second app that manually handles responses
 var config_two = JSON.parse(JSON.stringify(config));
@@ -48,10 +52,8 @@ app_two.use(function(req, res, next) {
 app_two.use(app_two.router);
 app_two.use(express.static(path.join(__dirname, 'public')));
 http.createServer(app_two).listen(app_two.get('port'));
-var deleteAccount_two = new DeleteAccount(app_two, config_two);
 
-var db = utls.getDatabase(config);
-var adapter = require(db.adapter)(config);
+var deleteAccount_two = new DeleteAccount(app_two, config_two, adapter);
 
 describe('# event listeners', function() {
 

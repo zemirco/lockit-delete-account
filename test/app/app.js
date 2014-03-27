@@ -8,6 +8,7 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
+var utils = require('lockit-utils');
 
 // require delete account middleware
 var DeleteAccount = require('../../index.js');
@@ -15,13 +16,13 @@ var DeleteAccount = require('../../index.js');
 function start(config) {
 
   config = config || require('./config.js');
-  
+
   var app = express();
 
-// set basedir so views can properly extend layout.jade
+  // set basedir so views can properly extend layout.jade
   app.locals.basedir = __dirname + '/views';
 
-// all environments
+  // all environments
   app.set('port', process.env.PORT || config.port || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
@@ -47,20 +48,22 @@ function start(config) {
     });
   }
 
-// set a dummy session for testing purpose
+  // set a dummy session for testing purpose
   app.use(function(req, res, next) {
     req.session.username = 'john';
     req.session.email = 'john@email.com';
     next();
   });
 
-// use delete account middleware with testing options
-  var deleteAccount = new DeleteAccount(app, config);
+  // use delete account middleware with testing options
+  var db = utils.getDatabase(config);
+  var adapter = require(db.adapter)(config);
+  var deleteAccount = new DeleteAccount(app, config, adapter);
 
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
 
-// development only
+  // development only
   if ('development' == app.get('env')) {
     app.use(express.errorHandler());
   }
@@ -69,9 +72,9 @@ function start(config) {
   app.get('/users', user.list);
 
   http.createServer(app).listen(app.get('port'));
-  
+
   return app;
-  
+
 }
 
 // export app for testing
