@@ -117,7 +117,7 @@ var DeleteAccount = module.exports = function(app, config, adapter) {
         }
 
         // delete user from db :(
-        adapter.remove('username', username, function(err) {
+        adapter.remove(username, function(err) {
           if (err) console.log(err);
 
           // kill session
