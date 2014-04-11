@@ -50,7 +50,7 @@ function start(config) {
 
   // set a dummy session for testing purpose
   app.use(function(req, res, next) {
-    req.session.username = 'john';
+    req.session.name = 'john';
     req.session.email = 'john@email.com';
     next();
   });

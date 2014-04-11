@@ -19,7 +19,7 @@ describe('# rest enabled', function() {
   before(function(done) {
     adapter.save('john', 'john@email.com', 'password', done);
   });
-  
+
   describe('GET /delete-account', function() {
 
     it('should render the default route (REST)', function(done) {
@@ -30,15 +30,15 @@ describe('# rest enabled', function() {
           done();
         });
     });
-    
+
   });
-  
+
   describe('POST /delete-account', function() {
 
     it('should show an error message when an input field is empty (REST)', function(done) {
       request(_app)
         .post('/rest/delete-account')
-        .send({username: '', phrase: 'lorem', password: 'secret'})
+        .send({name: '', phrase: 'lorem', password: 'secret'})
         .end(function(error, res) {
           res.statusCode.should.equal(403);
           res.text.should.equal('{"error":"All fields are required"}');
@@ -49,7 +49,7 @@ describe('# rest enabled', function() {
     it('should show an error message when phrase is incorrect', function(done) {
       request(_app)
         .post('/rest/delete-account')
-        .send({username: 'john', phrase: 'please do not delete my account forever', password: 'secret'})
+        .send({name: 'john', phrase: 'please do not delete my account forever', password: 'secret'})
         .end(function(error, res) {
           res.statusCode.should.equal(403);
           res.text.should.equal('{"error":"Phrase doesn\'t match"}');
@@ -60,7 +60,7 @@ describe('# rest enabled', function() {
     it('should show an error message when session doesn\'t match username', function(done) {
       request(_app)
         .post('/rest/delete-account')
-        .send({username: 'jack', phrase: 'please delete my account forever', password: 'secret'})
+        .send({name: 'jack', phrase: 'please delete my account forever', password: 'secret'})
         .end(function(error, res) {
           res.statusCode.should.equal(403);
           res.text.should.equal('{"error":"You can only delete your own account. Please enter your username"}');
@@ -71,7 +71,7 @@ describe('# rest enabled', function() {
     it('should show an error message when password is incorrect', function(done) {
       request(_app)
         .post('/rest/delete-account')
-        .send({username: 'john', phrase: 'please delete my account forever', password: 'secret'})
+        .send({name: 'john', phrase: 'please delete my account forever', password: 'secret'})
         .end(function(error, res) {
           res.statusCode.should.equal(403);
           res.text.should.equal('{"error":"Password is wrong"}');
@@ -82,13 +82,13 @@ describe('# rest enabled', function() {
     it('should delete a user from db when everything is fine', function(done) {
       request(_app)
         .post('/rest/delete-account')
-        .send({username: 'john', phrase: 'please delete my account forever', password: 'password'})
+        .send({name: 'john', phrase: 'please delete my account forever', password: 'password'})
         .end(function(error, res) {
           res.statusCode.should.equal(204);
           done();
         });
     });
-    
+
   });
-  
+
 });

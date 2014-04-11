@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(express.cookieParser('your secret here'));
 app.use(express.cookieSession());
 app.use(function(req, res, next) {
-  req.session.username = 'event';
+  req.session.name = 'event';
   req.session.email = 'event@email.com';
   next();
 });
@@ -45,7 +45,7 @@ app_two.use(express.json());
 app_two.use(express.cookieParser('your secret here'));
 app_two.use(express.cookieSession());
 app_two.use(function(req, res, next) {
-  req.session.username = 'event_two';
+  req.session.name = 'event_two';
   req.session.email = 'event_two@email.com';
   next();
 });
@@ -68,13 +68,13 @@ describe('# event listeners', function() {
 
     it('should emit a "delete" event on success', function(done) {
       deleteAccount.on('delete', function(user, res) {
-        user.username.should.equal('event');
+        user.name.should.equal('event');
         user.email.should.equal('event@email.com');
         done();
       });
       request(app)
         .post('/delete-account')
-        .send({username: 'event', phrase: 'please delete my account forever', password: 'password'})
+        .send({name: 'event', phrase: 'please delete my account forever', password: 'password'})
         .end(function(error, res) {
           res.statusCode.should.equal(200);
         });
@@ -90,7 +90,7 @@ describe('# event listeners', function() {
       });
       request(app_two)
         .post('/delete-account')
-        .send({username: 'event_two', phrase: 'please delete my account forever', password: 'password'})
+        .send({name: 'event_two', phrase: 'please delete my account forever', password: 'password'})
         .end(function(error, res) {
           res.text.should.include('awesome');
           done();

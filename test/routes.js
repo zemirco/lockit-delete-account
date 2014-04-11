@@ -16,9 +16,9 @@ _config.deleteAccount.route = '/delete-me';
 var _app = app(_config);
 
 describe('# custom routes', function() {
-  
+
   describe('GET /delete-account', function() {
-    
+
     it('should work with custom routes', function(done) {
       request(_app)
         .get('/delete-me')
@@ -28,7 +28,7 @@ describe('# custom routes', function() {
           done();
         });
     });
-    
+
   });
 
   describe('POST /delete-account', function() {
@@ -36,7 +36,7 @@ describe('# custom routes', function() {
     it('should work with custom routes', function(done) {
       request(_app)
         .post('/delete-me')
-        .send({username: '', phrase: 'lorem', password: 'secret'})
+        .send({name: '', phrase: 'lorem', password: 'secret'})
         .end(function(error, res) {
           res.statusCode.should.equal(403);
           res.text.should.include('All fields are required');
@@ -45,5 +45,5 @@ describe('# custom routes', function() {
     });
 
   });
-  
+
 });
