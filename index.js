@@ -1,5 +1,6 @@
+
 var path = require('path');
-var bcrypt = require('bcrypt');
+var pwd = require('couch-pwd');
 var utils = require('lockit-utils');
 
 // require event emitter
@@ -60,18 +61,18 @@ var DeleteAccount = module.exports = function(app, config, adapter) {
   // POST /delete-account
   function postDelete(req, res) {
     // verify input fields
-    var username = req.body.username;
+    var name = req.body.name;
     var phrase = req.body.phrase;
     var password = req.body.password;
 
     var error = null;
 
     // check for valid inputs and valid session
-    if (!username || !phrase || !password) {
+    if (!name || !phrase || !password) {
       error = 'All fields are required';
     } else if (phrase !== 'please delete my account forever') {
       error = 'Phrase doesn\'t match';
-    } else if (req.session.username !== username) {
+    } else if (req.session.name !== name) {
       error = 'You can only delete your own account. Please enter your username';
     }
 
@@ -91,17 +92,20 @@ var DeleteAccount = module.exports = function(app, config, adapter) {
     }
 
     // get user from db
-    adapter.find('username', username, function(err, user) {
+    adapter.find('name', name, function(err, user) {
       if (err) console.log(err);
 
       // no need to check if user exists in db since we are already checking against current session
 
+      // if user comes from couchdb it has an 'iterations' key
+      if (user.iterations) pwd.iterations(user.iterations);
+
       // verify user password
-      bcrypt.compare(password, user.hash, function(err, valid) {
+      pwd.hash(password, user.salt, function(err, hash) {
         if (err) console.log(err);
 
         // compare hash with hash from db
-        if (!valid) {
+        if (hash !== user.derived_key) {
           error = 'Password is wrong';
 
           // do not handle the route when REST is active
@@ -117,7 +121,7 @@ var DeleteAccount = module.exports = function(app, config, adapter) {
         }
 
         // delete user from db :(
-        adapter.remove(username, function(err) {
+        adapter.remove(name, function(err) {
           if (err) console.log(err);
 
           // kill session
