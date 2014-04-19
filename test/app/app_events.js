@@ -5,32 +5,41 @@ var express = require('express');
 var request = require('supertest');
 var should = require('should');
 var utls = require('lockit-utils');
-
-var config = require('./app/config.js');
-var DeleteAccount = require('../');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var cookieSession = require('cookie-session');
+var config = require('./config.js');
+var DeleteAccount = require('../../');
 
 var app = express();
 app.locals.basedir = __dirname + '/app/views';
 app.set('port', 6500);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
-app.use(express.urlencoded());
-app.use(express.json());
-app.use(express.cookieParser('your secret here'));
-app.use(express.cookieSession());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
+app.use(cookieParser());
+app.use(cookieSession({
+  secret: 'this is my super secret string'
+}));
+app.use(function(req, res, next) {
+  req.session.redirectUrlAfterLogin = '/jep';
+  next();
+});
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(function(req, res, next) {
   req.session.name = 'event';
   req.session.email = 'event@email.com';
   next();
 });
-app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
-http.createServer(app).listen(app.get('port'));
-
+app.get('/jep', function(req, res) {
+  res.send(200);
+});
 var db = utls.getDatabase(config);
 var adapter = require(db.adapter)(config);
-
-var deleteAccount = new DeleteAccount(app, config, adapter);
+var deleteAccount = new DeleteAccount(config, adapter);
+app.use(deleteAccount.router);
+http.createServer(app).listen(app.get('port'));
 
 // create second app that manually handles responses
 var config_two = JSON.parse(JSON.stringify(config));
@@ -40,20 +49,21 @@ app_two.locals.basedir = __dirname + '/app/views';
 app_two.set('port', 6501);
 app_two.set('views', __dirname + '/views');
 app_two.set('view engine', 'jade');
-app_two.use(express.urlencoded());
-app_two.use(express.json());
-app_two.use(express.cookieParser('your secret here'));
-app_two.use(express.cookieSession());
+app_two.use(bodyParser.urlencoded());
+app_two.use(bodyParser.json());
+app_two.use(cookieParser());
+app_two.use(cookieSession({
+  secret: 'this is my super secret string'
+}));
+app_two.use(express.static(path.join(__dirname, 'public')));
 app_two.use(function(req, res, next) {
   req.session.name = 'event_two';
   req.session.email = 'event_two@email.com';
   next();
 });
-app_two.use(app_two.router);
-app_two.use(express.static(path.join(__dirname, 'public')));
+var deleteAccount_two = new DeleteAccount(config_two, adapter);
+app_two.use(deleteAccount_two.router);
 http.createServer(app_two).listen(app_two.get('port'));
-
-var deleteAccount_two = new DeleteAccount(app_two, config_two, adapter);
 
 describe('# event listeners', function() {
 
