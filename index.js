@@ -1,11 +1,10 @@
 
 var path = require('path');
-var pwd = require('couch-pwd');
-var utils = require('lockit-utils');
-
-// require event emitter
 var events = require('events');
 var util = require('util');
+var express = require('express');
+var pwd = require('couch-pwd');
+var utils = require('lockit-utils');
 
 /**
  * Internal helper functions
@@ -19,9 +18,12 @@ function join(view) {
  * Let's get serious
  */
 
-var DeleteAccount = module.exports = function(app, config, adapter) {
+var DeleteAccount = module.exports = function(config, adapter) {
 
-  if (!(this instanceof DeleteAccount)) return new DeleteAccount(app, config, adapter);
+  if (!(this instanceof DeleteAccount)) return new DeleteAccount(config, adapter);
+
+  // call super constructor function
+  events.EventEmitter.call(this);
 
   var that = this;
 
@@ -38,8 +40,10 @@ var DeleteAccount = module.exports = function(app, config, adapter) {
    * Routes
    */
 
-  app.get(route, utils.restrict(config), getDelete);
-  app.post(route, utils.restrict(config), postDelete);
+  var router = express.Router();
+  router.get(route, utils.restrict(config), getDelete);
+  router.post(route, utils.restrict(config), postDelete);
+  this.router = router;
 
   /**
    * Route handlers
@@ -54,7 +58,8 @@ var DeleteAccount = module.exports = function(app, config, adapter) {
     var view = cfg.views.remove || join('get-delete-account');
 
     res.render(view, {
-      title: 'Delete account'
+      title: 'Delete account',
+      basedir: req.app.get('views')
     });
   }
 
@@ -86,14 +91,15 @@ var DeleteAccount = module.exports = function(app, config, adapter) {
       res.status(403);
       res.render(view, {
         title: 'Delete account',
-        error: error
+        error: error,
+        basedir: req.app.get('views')
       });
       return;
     }
 
     // get user from db
     adapter.find('name', name, function(err, user) {
-      if (err) console.log(err);
+      if (err) return next(err);
 
       // no need to check if user exists in db since we are already checking against current session
 
@@ -102,7 +108,7 @@ var DeleteAccount = module.exports = function(app, config, adapter) {
 
       // verify user password
       pwd.hash(password, user.salt, function(err, hash) {
-        if (err) console.log(err);
+        if (err) return next(err);
 
         // compare hash with hash from db
         if (hash !== user.derived_key) {
@@ -114,7 +120,8 @@ var DeleteAccount = module.exports = function(app, config, adapter) {
           res.status(403);
           res.render(view, {
             title: 'Delete account',
-            error: error
+            error: error,
+            basedir: req.app.get('views')
           });
           return;
 
@@ -122,7 +129,7 @@ var DeleteAccount = module.exports = function(app, config, adapter) {
 
         // delete user from db :(
         adapter.remove(name, function(err) {
-          if (err) console.log(err);
+          if (err) return next(err);
 
           // kill session
           req.session = null;
@@ -139,7 +146,8 @@ var DeleteAccount = module.exports = function(app, config, adapter) {
 
             // render success message
             res.render(view, {
-              title: 'Account deleted'
+              title: 'Account deleted',
+              basedir: req.app.get('views')
             });
 
           }
@@ -150,8 +158,6 @@ var DeleteAccount = module.exports = function(app, config, adapter) {
 
     });
   }
-
-  events.EventEmitter.call(this);
 
 };
 
