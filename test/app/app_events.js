@@ -30,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(function(req, res, next) {
   req.session.name = 'event';
   req.session.email = 'event@email.com';
+  req.session.loggedIn = true;
   next();
 });
 app.get('/jep', function(req, res) {
@@ -59,6 +60,7 @@ app_two.use(express.static(path.join(__dirname, 'public')));
 app_two.use(function(req, res, next) {
   req.session.name = 'event_two';
   req.session.email = 'event_two@email.com';
+  req.session.loggedIn = true;
   next();
 });
 var deleteAccount_two = new DeleteAccount(config_two, adapter);
