@@ -1,6 +1,6 @@
 {
   "name": "lockit-delete-account",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "delete account middleware for lockit",
   "main": "index.js",
   "scripts": {
