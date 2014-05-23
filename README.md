@@ -1,8 +1,8 @@
 # Lockit delete account
 
-[![Build Status](https://travis-ci.org/zeMirco/lockit-delete-account.svg?branch=master)](https://travis-ci.org/zeMirco/lockit-delete-account) [![NPM version](https://badge.fury.io/js/lockit-delete-account.svg)](http://badge.fury.io/js/lockit-delete-account)
+[![Build Status](https://travis-ci.org/zemirco/lockit-delete-account.svg?branch=master)](https://travis-ci.org/zemirco/lockit-delete-account) [![NPM version](https://badge.fury.io/js/lockit-delete-account.svg)](http://badge.fury.io/js/lockit-delete-account)
 
-Delete user accounts in your Express app. The module is part of [Lockit](https://github.com/zeMirco/lockit).
+Delete user accounts in your Express app. The module is part of [Lockit](https://github.com/zemirco/lockit).
 
 ## Installation
 
@@ -10,10 +10,10 @@ Delete user accounts in your Express app. The module is part of [Lockit](https:/
 
 ```js
 var DeleteAccount = require('lockit-delete-account');
-var lockitUtils = require('lockit-utils');
+var utils = require('lockit-utils');
 var config = require('./config.js');
 
-var db = lockitUtils.getDatabase(config);
+var db = utils.getDatabase(config);
 var adapter = require(db.adapter)(config);
 
 var app = express();
@@ -35,7 +35,7 @@ app.use(deleteAccount.router);
 
 ## Configuration
 
-More about configuration at [Lockit](https://github.com/zeMirco/lockit).
+More about configuration at [Lockit](https://github.com/zemirco/lockit).
 
 ## Features
 
