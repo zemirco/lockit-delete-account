@@ -23,7 +23,7 @@
   ],
   "dependencies": {
     "couch-pwd": "0.0.1",
-    "lockit-utils": "^0.4.0"
+    "lockit-utils": "^0.4.2"
   },
   "devDependencies": {
     "cookie": "^0.1.2",
