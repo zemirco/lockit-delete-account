@@ -59,6 +59,7 @@ function start(config) {
   app.use(function(req, res, next) {
     req.session.name = 'john';
     req.session.email = 'john@email.com';
+    req.session.loggedIn = true;
     next();
   });
 
