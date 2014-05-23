@@ -1,4 +1,8 @@
 
+##### 1.0.2 / 2014-05-23
+
+- update lockit-utils
+
 ##### 1.0.1 / 2014-05-23
 
 - refactor code
