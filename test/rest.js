@@ -63,7 +63,7 @@ describe('# rest enabled', function() {
         .send({name: 'jack', phrase: 'please delete my account forever', password: 'secret'})
         .end(function(error, res) {
           res.statusCode.should.equal(403);
-          res.text.should.equal('{"error":"You can only delete your own account. Please enter your username"}');
+          res.text.should.equal('{"error":"Please enter your username"}');
           done();
         });
     });

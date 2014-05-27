@@ -24,7 +24,7 @@ describe('# custom routes', function() {
         .get('/delete-me')
         .end(function(err, res) {
           res.statusCode.should.equal(200);
-          res.text.should.include('Once you delete your account, there is no going back');
+          res.text.should.include('There is no going back. Please be certain.');
           done();
         });
     });

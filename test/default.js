@@ -26,7 +26,7 @@ describe('# default config', function() {
         .get('/delete-account')
         .end(function(err, res) {
           res.statusCode.should.equal(200);
-          res.text.should.include('Once you delete your account, there is no going back');
+          res.text.should.include('There is no going back. Please be certain.');
           res.text.should.include('<title>Delete account</title>');
           done();
         });
@@ -64,7 +64,7 @@ describe('# default config', function() {
         .send({name: 'jack', phrase: 'please delete my account forever', password: 'secret'})
         .end(function(error, res) {
           res.statusCode.should.equal(403);
-          res.text.should.include('You can only delete your own account. Please enter your username');
+          res.text.should.include('Please enter your username');
           done();
         });
     });
