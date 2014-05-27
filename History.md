@@ -1,4 +1,11 @@
 
+##### 1.0.3 / 2014-05-27
+
+- set `autocomplete="off"`
+- use Bootstrap conditional classes
+- use `utils.destroy` to kill session
+- update dependencies
+
 ##### 1.0.2 / 2014-05-23
 
 - update lockit-utils
