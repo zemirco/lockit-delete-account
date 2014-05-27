@@ -104,7 +104,7 @@ DeleteAccount.prototype.postDelete = function(req, res, next) {
   } else if (phrase !== 'please delete my account forever') {
     error = 'Phrase doesn\'t match';
   } else if (req.session.name !== name) {
-    error = 'You can only delete your own account. Please enter your username';
+    error = 'Please enter your username';
   }
 
   // custom or built-in view
@@ -158,25 +158,27 @@ DeleteAccount.prototype.postDelete = function(req, res, next) {
         if (err) return next(err);
 
         // kill session
-        req.session = null;
+        utils.destroy(req, function() {
 
-        // emit 'delete' event
-        that.emit('delete', user, res);
+          // emit 'delete' event
+          that.emit('delete', user, res);
 
-        if (config.deleteAccount.handleResponse) {
+          if (config.deleteAccount.handleResponse) {
 
-          // do not handle the route when REST is active
-          if (config.rest) return res.send(204);
+            // do not handle the route when REST is active
+            if (config.rest) return res.send(204);
 
-          view = config.deleteAccount.views.removed || join('post-delete-account');
+            view = config.deleteAccount.views.removed || join('post-delete-account');
 
-          // render success message
-          res.render(view, {
-            title: 'Account deleted',
-            basedir: req.app.get('views')
-          });
+            // render success message
+            res.render(view, {
+              title: 'Account deleted',
+              basedir: req.app.get('views')
+            });
 
-        }
+          }
+
+        });
 
       });
 
