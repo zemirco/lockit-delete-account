@@ -26,8 +26,8 @@ describe('# default config', function() {
         .get('/delete-account')
         .end(function(err, res) {
           res.statusCode.should.equal(200);
-          res.text.should.include('There is no going back. Please be certain.');
-          res.text.should.include('<title>Delete account</title>');
+          res.text.should.containEql('There is no going back. Please be certain.');
+          res.text.should.containEql('<title>Delete account</title>');
           done();
         });
     });
@@ -42,7 +42,7 @@ describe('# default config', function() {
         .send({name: '', phrase: 'lorem', password: 'secret'})
         .end(function(error, res) {
           res.statusCode.should.equal(403);
-          res.text.should.include('All fields are required');
+          res.text.should.containEql('All fields are required');
           done();
         });
     });
@@ -53,7 +53,7 @@ describe('# default config', function() {
         .send({name: 'john', phrase: 'please do not delete my account forever', password: 'secret'})
         .end(function(error, res) {
           res.statusCode.should.equal(403);
-          res.text.should.include('Phrase doesn\'t match');
+          res.text.should.containEql('Phrase doesn\'t match');
           done();
         });
     });
@@ -64,7 +64,7 @@ describe('# default config', function() {
         .send({name: 'jack', phrase: 'please delete my account forever', password: 'secret'})
         .end(function(error, res) {
           res.statusCode.should.equal(403);
-          res.text.should.include('Please enter your username');
+          res.text.should.containEql('Please enter your username');
           done();
         });
     });
@@ -75,7 +75,7 @@ describe('# default config', function() {
         .send({name: 'john', phrase: 'please delete my account forever', password: 'secret'})
         .end(function(error, res) {
           res.statusCode.should.equal(403);
-          res.text.should.include('Password is wrong');
+          res.text.should.containEql('Password is wrong');
           done();
         });
     });
@@ -86,8 +86,8 @@ describe('# default config', function() {
         .send({name: 'john', phrase: 'please delete my account forever', password: 'password'})
         .end(function(error, res) {
           res.statusCode.should.equal(200);
-          res.text.should.include('<title>Account deleted</title>');
-          res.text.should.include('Your accout has been deleted.');
+          res.text.should.containEql('<title>Account deleted</title>');
+          res.text.should.containEql('Your accout has been deleted.');
           done();
         });
     });

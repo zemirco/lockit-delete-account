@@ -16,21 +16,21 @@ _config.csrf = true;
 var _app = app(_config);
 
 describe('# csrf', function() {
-  
+
   describe('GET /delete-account', function() {
-    
+
     it('should include the token in the view', function(done) {
       request(_app)
         .get('/delete-account')
         .end(function(err, res) {
           var cookies = cookie.parse(res.headers['set-cookie'][0]);
           var token = cookies.csrf;
-          res.text.should.include('name="_csrf" value="' + token + '"');
+          res.text.should.containEql('name="_csrf" value="' + token + '"');
           res.statusCode.should.equal(200);
           done();
         });
     });
-    
+
   });
-  
+
 });

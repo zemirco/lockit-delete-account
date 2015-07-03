@@ -24,7 +24,7 @@ describe('# custom routes', function() {
         .get('/delete-me')
         .end(function(err, res) {
           res.statusCode.should.equal(200);
-          res.text.should.include('There is no going back. Please be certain.');
+          res.text.should.containEql('There is no going back. Please be certain.');
           done();
         });
     });
@@ -39,7 +39,7 @@ describe('# custom routes', function() {
         .send({name: '', phrase: 'lorem', password: 'secret'})
         .end(function(error, res) {
           res.statusCode.should.equal(403);
-          res.text.should.include('All fields are required');
+          res.text.should.containEql('All fields are required');
           done();
         });
     });

@@ -31,7 +31,7 @@ describe('# custom views', function() {
       request(_app)
         .get('/delete-account')
         .end(function(err, res) {
-          res.text.should.include('Please don\'t go!');
+          res.text.should.containEql('Please don\'t go!');
           done();
         });
     });
@@ -45,7 +45,7 @@ describe('# custom views', function() {
         .post('/delete-account')
         .send({name: 'john', phrase: 'please delete my account forever', password: 'secret'})
         .end(function(error, res) {
-          res.text.should.include('Please don\'t go!');
+          res.text.should.containEql('Please don\'t go!');
           done();
         });
     });
@@ -55,7 +55,7 @@ describe('# custom views', function() {
         .post('/delete-account')
         .send({name: 'john', phrase: 'please delete my account forever', password: 'password'})
         .end(function(error, res) {
-          res.text.should.include('We will miss you!');
+          res.text.should.containEql('We will miss you!');
           done();
         });
     });
