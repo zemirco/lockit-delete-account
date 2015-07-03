@@ -1,4 +1,10 @@
 
+##### 1.0.4 / 2015-07-03
+
+- use eslint
+- update dependencies
+- use make instead grunt
+
 ##### 1.0.3 / 2014-05-27
 
 - set `autocomplete="off"`
