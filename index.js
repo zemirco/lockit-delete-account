@@ -1,3 +1,4 @@
+'use strict';
 
 var path = require('path');
 var events = require('events');
@@ -26,7 +27,7 @@ function join(view) {
  */
 var DeleteAccount = module.exports = function(config, adapter) {
 
-  if (!(this instanceof DeleteAccount)) return new DeleteAccount(config, adapter);
+  if (!(this instanceof DeleteAccount)) {return new DeleteAccount(config, adapter); }
 
   this.config = config;
   this.adapter = adapter;
@@ -38,13 +39,13 @@ var DeleteAccount = module.exports = function(config, adapter) {
   var route = config.deleteAccount.route || '/delete-account';
 
   // add prefix when rest is active
-  if (config.rest) route = '/rest' + route;
+  if (config.rest) {route = '/rest' + route; }
 
   /**
    * Routes
    */
 
-  var router = express.Router();
+  var router = new express.Router();
   router.get(route, utils.restrict(config), this.getDelete.bind(this));
   router.post(route, utils.restrict(config), this.postDelete.bind(this));
   this.router = router;
@@ -66,7 +67,7 @@ DeleteAccount.prototype.getDelete = function(req, res, next) {
   var config = this.config;
 
   // do not handle the route when REST is active
-  if (config.rest) return next();
+  if (config.rest) {return next(); }
 
   // custom or built-in view
   var view = config.deleteAccount.views.remove || join('get-delete-account');
@@ -112,50 +113,48 @@ DeleteAccount.prototype.postDelete = function(req, res, next) {
 
   if (error) {
     // do not handle the route when REST is active
-    if (config.rest) return res.json(403, {error: error});
+    if (config.rest) {return res.json(403, {error: error}); }
 
     res.status(403);
-    res.render(view, {
+    return res.render(view, {
       title: 'Delete account',
       error: error,
       basedir: req.app.get('views')
     });
-    return;
   }
 
   // get user from db
   adapter.find('name', name, function(err, user) {
-    if (err) return next(err);
+    if (err) {return next(err); }
 
     // no need to check if user exists in db since we are already checking against current session
 
     // if user comes from couchdb it has an 'iterations' key
-    if (user.iterations) pwd.iterations(user.iterations);
+    if (user.iterations) {pwd.iterations(user.iterations); }
 
     // verify user password
-    pwd.hash(password, user.salt, function(err, hash) {
-      if (err) return next(err);
+    pwd.hash(password, user.salt, function(hashErr, hash) {
+      if (hashErr) {return next(hashErr); }
 
       // compare hash with hash from db
       if (hash !== user.derived_key) {
         error = 'Password is wrong';
 
         // do not handle the route when REST is active
-        if (config.rest) return res.json(403, {error: error});
+        if (config.rest) {return res.json(403, {error: error}); }
 
         res.status(403);
-        res.render(view, {
+        return res.render(view, {
           title: 'Delete account',
           error: error,
           basedir: req.app.get('views')
         });
-        return;
 
       }
 
       // delete user from db :(
-      adapter.remove(name, function(err) {
-        if (err) return next(err);
+      adapter.remove(name, function(removeErr) {
+        if (removeErr) {return next(removeErr); }
 
         // kill session
         utils.destroy(req, function() {
@@ -166,7 +165,7 @@ DeleteAccount.prototype.postDelete = function(req, res, next) {
           if (config.deleteAccount.handleResponse) {
 
             // do not handle the route when REST is active
-            if (config.rest) return res.send(204);
+            if (config.rest) {return res.send(204); }
 
             view = config.deleteAccount.views.removed || join('post-delete-account');
 
